@@ -10,3 +10,13 @@ The movement will incorporate a combination of rotation (related to age of cell)
 The lifespan of each cell will be relative to it's generation number
 
 The cell could use a concept of 'fertility' but will self-fertilize (binary- or multiple-fission)
+
+When the cell has split, it still exists (gets drawn) but velocity is zero
+
+A new cell needs to inherit:
+Position (= current parent position)
+Velocity (heading + magnitude) (heading = a function of parent, magnitude = parent)
+Starting radius (= current parent radius)
+Starting maturity or branch level
+
+
