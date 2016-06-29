@@ -32,3 +32,4 @@ Fertility (= 'time until branch')
 Branchiness (= number of branches, from zero to Max)
 Branch angle (new direction vs parent direction)
 
+Compared to Cellendipity, the main distinction is that the rules for spawning new cells here are governed by an internal 'recursion rule' as opposed to an external 'environmental chance rule' (ie. being fertile while occupying the same space as a fertile other)
