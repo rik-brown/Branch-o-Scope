@@ -15,7 +15,7 @@ function setup() {
   gui = new dat.GUI();
   //gui.remember(p); // Can add later
   initGUI();
-  createCanvas(600, 600);
+  createCanvas(1000, 1000);
   ellipseMode(RADIUS);
   populateColony();
 }
@@ -30,7 +30,10 @@ function draw() {
     if (p.displayMode == 2) {colony[i].displayPoint();}
 
     if (colony[i].timeToDivide()) {
-      if (colony.length < 256) {
+      if (colony.length < 128) {
+        print('Divide!');
+        var spawn1 = colony[i].spawn(30)
+        print('spawn1' + spawn1);
         colony.push(colony[i].spawn(30)); // Add one going right
         colony.push(colony[i].spawn(-25)); // Add one going left
       } else {
@@ -43,7 +46,7 @@ function draw() {
 function populateColony() {
   background(p.bkgcol);
   colony = []; // Empty the arraylist (or make sure it is empty)
-  var pos = createVector(width/2, height/2); // First cell is located at center of canvas
+  var pos = createVector(width/2, height); // First cell is located at center/bottom of canvas
   var vel = createVector(0,-1); // Initial velocity vector is northbound
   var c = new Cell (pos, vel, p.cellStartSize, p.lifespan);
   print (c);
@@ -62,10 +65,10 @@ function trails() {
 
 var Parameters = function () { //These are the initial values, not the randomised ones
   this.bkgcol = 128; // Background colour (greyscale)
-  this.cellStartSize = 50; // Starting cell radius
+  this.cellStartSize = 20; // Starting cell radius
   this.lifespan = 200; // How long will the cell live?
   this.displayMode = 1; // 1=ellipse, 2=point, 3=text
-  this.trailMode = 1; // 1=none, 2 = blend, 3 = continuous
+  this.trailMode = 3; // 1=none, 2 = blend, 3 = continuous
 }
 
 var initGUI = function () {

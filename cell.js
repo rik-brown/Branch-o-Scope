@@ -15,8 +15,10 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
   this.cellEndSize = 0.5;
   this.r = this.cellStartSize; // Initial value for radius
   this.size = map(this.r, this.cellStartSize, this.cellEndSize, 1, 0); // Size is a measure of progress from starting to final radius
-  this.flatness = random (0.6, 1.4); // Flatness makes the circle into an ellipse
-  this.growth = (this.cellStartSize-this.cellEndSize)/this.lifespan; // Growth-rate is calculated from size & expected lifespan
+  //this.flatness = random (0.6, 1.4); // Flatness makes the circle into an ellipse
+  this.flatness = 1;
+  //this.growth = (this.cellStartSize-this.cellEndSize)/this.lifespan; // Growth-rate is calculated from size & expected lifespan
+  this.growth = random (0.005, 0.05);
 
   // MOVEMENT
   this.position = pos.copy(); //cell has position
@@ -56,14 +58,20 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
   this.spawn = function(angle) {
     // What is my current heading
     var theta = this.velocity.heading();
+    print ('theta=' + theta);
     // What is my current speed
     var m = this.velocity.mag();
+    print ('m=' + m);
     // Turn me
     theta += radians(angle);
     // Look, polar coordinates to cartesian!!
     var newvel = createVector(m * cos(theta), m * sin(theta));
+    print ('newvel=' + newvel)
+    print ('r=' + this.r);
+    print ('lifespan=' + this.lifespan)
+    print
     // Return a new Branch
-    return new Cell(this.pos, newvel, this.r, this.lifespan * 0.66);
+    return new Cell(this.position, newvel, this.r * 0.66, this.lifespan * 0.66);
   }
 
 
@@ -72,7 +80,7 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
   // Display the cell using ellipse
   this.displayEllipse = function() {
     noStroke();
-    fill(255, 0, 0);
+    fill(255);
     var angle = this.velocity.heading();
     push();
     translate(this.position.x, this.position.y);
