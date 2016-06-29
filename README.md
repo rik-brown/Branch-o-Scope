@@ -7,11 +7,11 @@ The spawned children will be the recursive element, calling the primary function
 
 The movement will incorporate a combination of rotation (related to age of cell) and perlin noise (for some variation between cells)
 
-The lifespan of each cell will be relative to it's generation number
+The lifespan of each cell will be relative to it's generation number <Lifespan is multiplied by a value (0.8) at each branch>
 
 The cell could use a concept of 'fertility' but will self-fertilize (binary- or multiple-fission)
 
-When the cell has split, it still exists (gets drawn) but velocity is zero
+When the cell has split, it still exists (gets drawn) but velocity is zero <Or maybe it is not preferable to continue drawing it>
 
 A new cell needs to inherit:
 Position (= current parent position)
@@ -26,10 +26,15 @@ The same goes for 'number of branches'
 
 Approach should be to identify which parameters will the cell 'own' and how will random be included.
 Proposals:
-Movement 
+Movement
 Growth (can be -ve or +ve)
 Fertility (= 'time until branch')
 Branchiness (= number of branches, from zero to Max)
 Branch angle (new direction vs parent direction)
 
 Compared to Cellendipity, the main distinction is that the rules for spawning new cells here are governed by an internal 'recursion rule' as opposed to an external 'environmental chance rule' (ie. being fertile while occupying the same space as a fertile other)
+
+It would be awesome to offer the alternative to use a steering force (e.g. avoidance) as an alternative to perlin noise.
+Some colour could be nice - colourshifting as radius shrinks?
+
+NEEDS SOME BUGFIXING - Define the rules for splicing the cells & check that this doesn't create issues downstream
