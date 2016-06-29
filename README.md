@@ -19,4 +19,16 @@ Velocity (heading + magnitude) (heading = a function of parent, magnitude = pare
 Starting radius (= current parent radius)
 Starting maturity or branch level
 
+Should the 'timeToBranch' parameter be passed on to the cell or calculated inside the cell?
+Either way, there needs to be an opportunity to add random / allow for individual variations
+
+The same goes for 'number of branches'
+
+Approach should be to identify which parameters will the cell 'own' and how will random be included.
+Proposals:
+Movement 
+Growth (can be -ve or +ve)
+Fertility (= 'time until branch')
+Branchiness (= number of branches, from zero to Max)
+Branch angle (new direction vs parent direction)
 
