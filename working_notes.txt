@@ -1,0 +1,2 @@
+The cells need do be splice once they have come to the end of their branch.
+Maybe the best way to do this is to define a parameter passed into a 'seed cell' giving 'max nr. of generations'
