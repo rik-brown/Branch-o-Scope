@@ -2,12 +2,14 @@
 function Cell(pos, vel, cellStartSize_, lifespan_) {
 
   // BOOLEAN
-  this.growing = true; // A new cell always starts of moving
+  this.growing = true; // A new cell always starts of moving & growing
 
   // GROWTH & REPRODUCTION
-  this.lifespan = lifespan_ * random (0.5, 1.5);
-  this.life = lifespan_;
   this.age = 0;
+  this.growth = p.growth * 0.01; //Growth Factor is determined by GUI & is equal for all cells
+  //this.lifespan = lifespan_ * random (0.8, 1.2);
+  this.lifespan = lifespan_ + 1;
+  this.life = this.lifespan;
 
 
   // SIZE AND SHAPE
@@ -18,7 +20,7 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
   //this.flatness = random (0.6, 1.4); // Flatness makes the circle into an ellipse
   this.flatness = 1;
   //this.growth = (this.cellStartSize-this.cellEndSize)/this.lifespan; // Growth-rate is calculated from size & expected lifespan
-  this.growth = random (0.01, 0.05);
+
 
   // MOVEMENT
   this.position = pos.copy(); //cell has position
@@ -32,7 +34,8 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
 
   this.run = function() {
     this.live(); // Cell matures (may be useful later for colorshifting)
-    if (this.growing) {this.updatePosition(); this.updateSize();} // Cell moves & grows if it is moving
+    this.updatePosition();
+    this.updateSize();
   }
 
   this.live = function() {
@@ -53,13 +56,13 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
   }
 
   this.updateSize = function() {
-    this.r -= this.growth;
+    this.r += this.growth;
     this.size = map(this.r, this.cellStartSize, this.cellEndSize, 1, 0);
   }
 
   this.timeToDivide = function() {
     this.life--;
-    if (this.life < 0 && this.growing) {
+    if (this.life < 0 && this.growing) { // when life has counted down to zero, the cell will divide
       this.growing = false;
       return true;
     } else {
@@ -81,12 +84,10 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
   }
 
 
-
-
   // Display the cell using ellipse
   this.displayEllipse = function() {
-    stroke(255, 10);
-    noFill();
+    stroke(255, 40);
+    fill(0);
     var angle = this.velocity.heading();
     push();
     translate(this.position.x, this.position.y);
@@ -99,30 +100,18 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
   // Display the cell using points
   this.displayPoint = function() {
     noFill();
-    strokeWeight(5);
-    stroke(255, 0, 0, 128);
+    strokeWeight(1);
+    stroke(255);
     point(this.position.x, this.position.y);
   }
 
-  // this.conception = function(other, distVect) {
-  //   // Decrease spawn counters.
-  //   this.spawnCount--;
-  //   other.spawnCount--;
-  //
-  //   // Calculate position for spawn based on PVector between cell & other (leaving 'distVect' unchanged, as it is needed later)
-  //   this.spawnPos = distVect.copy(); // Create spawnPos as a copy of the (already available) distVect which points from parent cell to other
-  //   this.spawnPos.normalize();
-  //   this.spawnPos.mult(this.r); // The spawn position is located at parent cell's radius
-  //   this.spawnPos.add(this.position);
-  //
-  //   // Calculate velocity vector for spawn as being centered between parent cell & other
-  //   this.spawnVel = this.velocity.copy(); // Create spawnVel as a copy of parent cell's velocity vector
-  //   this.spawnVel.add(other.velocity); // Add dad's velocity
-  //   this.spawnVel.normalize(); // Normalize to leave just the direction and magnitude of 1 (will be multiplied later)
-  //
-  //   // Call spawn method (in Colony) with the new parameters for position, velocity, colour & starting radius)
-  //   colony.spawn(this.spawnPos, this.spawnVel, this.r*p.growthFactor);
-  //
-  // }
+  // Death
+  this.dead = function() {
+    if (this.r < 0 || this.r > this.cellStartize * 4) {print('Death by size'); return true;} // Death by size
+    if (this.maturity = 0) {print('Death by old age');return true;} // Death by old age (regardless of size, which may remain constant)
+    if (this.position.x > width + this.r*this.flatness || this.position.x < -this.r*this.flatness || this.position.y > height + this.r*this.flatness || this.position.y < -this.r*this.flatness) {return true;} // Death if move beyond canvas boundary
+    else {return false; }
+  }
+
 
 }

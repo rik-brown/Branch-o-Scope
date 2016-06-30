@@ -1,17 +1,17 @@
 # cellifract
 Kadenze Nature of Code Assignment 4: Fractals
 
-I will create a recursive function which consists of a cell object
-The cell will have a behaviour which includes movement, growth & spawning a number of children
-The spawned children will be the recursive element, calling the primary function anew
+I aim to create a recursive function using a 'cell' object
+The cell will have behaviour including movement, growth & spawning a number of children
+The spawned of children will be the recursive element, calling the primary constructor function anew
 
-The movement will incorporate a combination of rotation (related to age of cell) and perlin noise (for some variation between cells)
+The movement will incorporate a blend of linear velocity with heading-rotation (related to age of cell) and perlin noise (for some variation between cells)
 
-The lifespan of each cell will be relative to it's generation number <Lifespan is multiplied by a value (0.8) at each branch>
+The lifespan of each cell will be relative to it's generation number <Currently solved by: Lifespan is multiplied by a static value (0.8) at each branch>
 
 The cell could use a concept of 'fertility' but will self-fertilize (binary- or multiple-fission)
 
-When the cell has split, it still exists (gets drawn) but velocity is zero <Or maybe it is not preferable to continue drawing it>
+When the cell has split, it still exists (gets drawn) but velocity is zero <Or maybe it is not preferable to continue drawing it, if the primary rendering technique will be 'trails'>
 
 A new cell needs to inherit:
 Position (= current parent position)
@@ -19,10 +19,11 @@ Velocity (heading + magnitude) (heading = a function of parent, magnitude = pare
 Starting radius (= current parent radius)
 Starting maturity or branch level
 
-Should the 'timeToBranch' parameter be passed on to the cell or calculated inside the cell?
+Should the 'timeToBranch' parameter be passed in from the main Draw() loop to the cell or calculated from inside the cell?
 Either way, there needs to be an opportunity to add random / allow for individual variations
+Maybe a simple 'generation' value is the most flexible alternative?
 
-The same goes for 'number of branches'
+The same goes for 'number of branches' to split into, when the time comes.
 
 Approach should be to identify which parameters will the cell 'own' and how will random be included.
 Proposals:

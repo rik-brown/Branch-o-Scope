@@ -13,29 +13,29 @@ var colony = []; // an array of cells
 function setup() {
   p = new Parameters();
   gui = new dat.GUI();
-  //gui.remember(p); // Can add later
   initGUI();
-  createCanvas(1000, 1000);
+  createCanvas(windowWidth, windowHeight);
   ellipseMode(RADIUS);
   populateColony();
 }
 
 function draw() {
+  colonyDebugger();
   if (p.trailMode == 1) {background(p.bkgcol);}
   if (p.trailMode == 2) {trails();}
-  for (var i = colony.length-1; i >0;  i--) {
+  for (var i = colony.length-1; i >=0;  i--) { // Iterate through the array backwards because objects are being spliced
     var c = colony[i];
     c.run(); // runs the cell at position i in the colony array
-    if (p.displayMode == 1) {c.displayEllipse();}
-    if (p.displayMode == 2) {c.displayPoint();}
-    if (c.r <= 0) {colony.splice(i, 1);}
+    if (c.growing && p.displayMode == 1) {c.displayEllipse();}
+    if (c.growing && p.displayMode == 2) {c.displayPoint();}
     if (c.timeToDivide()) {
-      if (colony.length < 256) {
-        colony.push(colony[i].spawn(30)); // Add new cell going right
-        colony.push(colony[i].spawn(-25)); // Add new cell going left
+      if (colony.length < 512) {
+        colony.push(colony[i].spawn(random(10, 30))); // Add new cell going right
+        colony.push(colony[i].spawn(random(-10,-30))); // Add new cell going left
         colony.splice(i, 1); // Remove the current cell from the array
       }
     }
+    if (c.dead()) {colony.splice(i, 1);} // if a cell has died, remove it from the array
   }
   if (colony.length === 0) { if (keyIsPressed || p.autoRestart) {populateColony(); } } // Repopulate the colony when all the cells have died
 }
@@ -43,9 +43,9 @@ function draw() {
 function populateColony() {
   background(p.bkgcol);
   colony = []; // Empty the arraylist (or make sure it is empty)
-  for (var n = 0; n < random(1, 5); n++) {
+  for (var n = 0; n < p.colonySize; n++) {
     var pos = createVector(width/2, height/2); // First cell is located at center/bottom of canvas
-    var vel = createVector(random(-1, 1), random(-1, 1)); // Initial velocity vector is northbound
+    var vel = p5.Vector.random2D(); // Initial velocity vector is northbound
     var c = new Cell (pos, vel, p.cellStartSize, p.lifespan);
     colony.push(c);
   }
@@ -62,8 +62,10 @@ function trails() {
 }
 
 var Parameters = function () { //These are the initial values, not the randomised ones
-  this.bkgcol = 128; // Background colour (greyscale)
+  this.bkgcol = 0; // Background colour (greyscale)
+  this.colonySize = 1; // Number of cells spawned initially
   this.cellStartSize = 20; // Starting cell radius
+  this.growth = 0; // If +ve, cell size will increase, if -ve, cell size will decrease
   this.lifespan = 200; // How long will the cell live?
   this.displayMode = 1; // 1=ellipse, 2=point, 3=text
   this.trailMode = 3; // 1=none, 2 = blend, 3 = continuous
@@ -74,7 +76,11 @@ var Parameters = function () { //These are the initial values, not the randomise
 }
 
 var initGUI = function () {
-		var controller = gui.add(p, 'cellStartSize', 2, 200).step(1).name('Size').listen();
+    var controller = gui.add(p, 'colonySize', 1, 20).step(1).name('Colony Size').listen();
+      controller.onChange(function(value) {populateColony(); });
+    var controller = gui.add(p, 'cellStartSize', 2, 200).step(1).name('Cell Size').listen();
+    	controller.onChange(function(value) {populateColony(); });
+    var controller = gui.add(p, 'growth', -10, +10).step(0.1).name('Growth Factor').listen();
     	controller.onChange(function(value) {populateColony(); });
     var controller = gui.add(p, 'lifespan', 50, 500).step(1).name('Lifespan').listen();
     	controller.onChange(function(value) {populateColony(); });
@@ -103,4 +109,18 @@ function mouseDragged() {
   var vel = p5.Vector.random2D();
   var c = new Cell (mousePos, vel, p.cellStartSize, p.lifespan);
   if (mousePos.x < (width-270)) {colony.push(c);}
+}
+
+function keyTyped() {
+  if (key === ' ') { //spacebar respawns with current settings
+    populateColony();
+  }
+}
+
+function colonyDebugger() { // Displays some values as text at the top left corner (for debug only)
+  fill(0);
+  rect(0,0,300,20);
+  fill(360, 100);
+  textSize(16);
+  text("Nr. cells: " + colony.length, 10, 20);
 }

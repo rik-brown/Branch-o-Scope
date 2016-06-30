@@ -1,2 +1,14 @@
 The cells need do be splice once they have come to the end of their branch.
 Maybe the best way to do this is to define a parameter passed into a 'seed cell' giving 'max nr. of generations'
+
+
+Consider importing the 'colourshift' functionality from Cellendipity
+
+The cell currently has no death() function, so it can only be killed from above
+Need a way to kill the cell, even when it doesn't branching
+
+The recursive event is basically the branching
+The rest of the cell's life can be governed by it's own 'living rules'
+
+Maybe a simple implementation is: keep branching until cell dies?
+Cell only dies when death rules are met
