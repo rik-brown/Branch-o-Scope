@@ -89,3 +89,18 @@ var initGUI = function () {
     gui.add(p, 'restart').name('RESTART');
     gui.close()
 }
+
+
+function mousePressed() {
+  var mousePos = createVector(mouseX, mouseY);
+  var vel = p5.Vector.random2D();
+  var c = new Cell (mousePos, vel, p.cellStartSize, p.lifespan);
+  if (mousePos.x < (width-270)) {colony.push(c);}
+}
+
+function mouseDragged() {
+  var mousePos = createVector(mouseX, mouseY);
+  var vel = p5.Vector.random2D();
+  var c = new Cell (mousePos, vel, p.cellStartSize, p.lifespan);
+  if (mousePos.x < (width-270)) {colony.push(c);}
+}
