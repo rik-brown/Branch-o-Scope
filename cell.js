@@ -5,12 +5,12 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
   this.growing = true; // A new cell always starts of moving & growing
 
   // GROWTH & REPRODUCTION
-  this.age = 0;
-  this.growth = p.growth * 0.01; //Growth Factor is determined by GUI & is equal for all cells
-  //this.lifespan = lifespan_ * random (0.8, 1.2);
-  this.lifespan = lifespan_ + 1;
-  this.life = this.lifespan;
   this.level = level_;
+  this.age = 0;
+  this.growth = p.growth * random (0.009, 0.011); //Growth Factor is determined by GUI & is equal for all cells
+  this.lifespan = lifespan_ * random (0.9, 1.1);
+  this.life = this.lifespan;
+
 
   // FILL COLOR
   this.fill_H = hue(p.fillColor)
@@ -115,15 +115,15 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
   // Display the cell using points
   this.displayPoint = function() {
     noFill();
-    strokeWeight(1);
+    strokeWeight(3);
     stroke(hue(this.strokeColor), saturation(this.strokeColor), brightness(this.strokeColor), this.strokeAlpha);
     point(this.position.x, this.position.y);
   }
 
   // Death
   this.dead = function() {
-    if (this.r < 0 || this.r > this.cellStartize * 4) {print('Death by size'); return true;} // Death by size
-    if (this.maturity = 0) {print('Death by old age');return true;} // Death by old age (regardless of size, which may remain constant)
+    if (this.r < 0 || this.r > this.cellStartize * 4) {return true;} // Death by size
+    //if (this.maturity = 0) {return true;} // Death by old age (regardless of size, which may remain constant)
     if (this.position.x > width + this.r*this.flatness || this.position.x < -this.r*this.flatness || this.position.y > height + this.r*this.flatness || this.position.y < -this.r*this.flatness) {return true;} // Death if move beyond canvas boundary
     else {return false; }
   }
