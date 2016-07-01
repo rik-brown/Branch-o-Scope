@@ -12,3 +12,9 @@ The rest of the cell's life can be governed by it's own 'living rules'
 
 Maybe a simple implementation is: keep branching until cell dies?
 Cell only dies when death rules are met
+
+As an aesthetic experiment, it might be nice to draw a circle at the point of branching (in 'line' mode)
+
+There are two alternatives I'd like to see:
+1. (as now) where a 'split' occurs at the END of a branch (the branching cell is spliced away)
+2. Where the main trunk continues to grow after it has spawned out one or more side-branches

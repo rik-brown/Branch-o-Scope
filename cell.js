@@ -1,5 +1,5 @@
 // cell Class
-function Cell(pos, vel, cellStartSize_, lifespan_) {
+function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
 
   // BOOLEAN
   this.growing = true; // A new cell always starts of moving & growing
@@ -10,7 +10,21 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
   //this.lifespan = lifespan_ * random (0.8, 1.2);
   this.lifespan = lifespan_ + 1;
   this.life = this.lifespan;
+  this.level = level_;
 
+  // FILL COLOR
+  this.fill_H = hue(p.fillColor)
+  this.fill_S = saturation(p.fillColor)
+  this.fill_B = brightness(p.fillColor)
+  this.fillColor = color(this.fill_H, this.fill_S, this.fill_B); // Initial color is set
+  this.fillAlpha = p.fillAlpha
+
+  //STROKE COLOR
+  this.stroke_H = hue(p.strokeColor)
+  this.stroke_S = saturation(p.strokeColor)
+  this.stroke_B = brightness(p.strokeColor)
+  this.strokeColor = color(this.stroke_H, this.stroke_S, this.stroke_B); // Initial color is set
+  this.strokeAlpha = p.strokeAlpha
 
   // SIZE AND SHAPE
   this.cellStartSize = cellStartSize_;
@@ -36,6 +50,7 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
     this.live(); // Cell matures (may be useful later for colorshifting)
     this.updatePosition();
     this.updateSize();
+    //this.cellDebugger();
   }
 
   this.live = function() {
@@ -80,14 +95,14 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
     // Look, polar coordinates to cartesian!!
     var newvel = createVector(m * cos(theta), m * sin(theta));
     // Return a new Branch
-    return new Cell(this.position, newvel, this.r, this.lifespan * 0.8);
+    return new Cell(this.position, newvel, this.r, this.lifespan * 0.9, this.level);
   }
 
 
   // Display the cell using ellipse
   this.displayEllipse = function() {
-    stroke(255, 40);
-    fill(0);
+    stroke(hue(this.strokeColor), saturation(this.strokeColor), brightness(this.strokeColor), this.strokeAlpha);
+    fill(hue(this.fillColor), saturation(this.fillColor), brightness(this.fillColor), this.fillAlpha);
     var angle = this.velocity.heading();
     push();
     translate(this.position.x, this.position.y);
@@ -101,7 +116,7 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
   this.displayPoint = function() {
     noFill();
     strokeWeight(1);
-    stroke(255);
+    stroke(hue(this.strokeColor), saturation(this.strokeColor), brightness(this.strokeColor), this.strokeAlpha);
     point(this.position.x, this.position.y);
   }
 
@@ -112,6 +127,32 @@ function Cell(pos, vel, cellStartSize_, lifespan_) {
     if (this.position.x > width + this.r*this.flatness || this.position.x < -this.r*this.flatness || this.position.y > height + this.r*this.flatness || this.position.y < -this.r*this.flatness) {return true;} // Death if move beyond canvas boundary
     else {return false; }
   }
+
+  this.cellDebugger = function() { // Displays cell parameters as text (for debug only)
+    var rowHeight = 15;
+    fill(255);
+    textSize(rowHeight);
+    // RADIUS
+    //text("r:" + this.r, this.position.x, this.position.y + rowHeight*0);
+    //text("cellStartSize:" + this.cellStartSize, this.position.x, this.position.y + rowHeight*2);
+    //text("cellEndSize:" + this.cellEndSize, this.position.x, this.position.y + rowHeight*3);
+
+    // GROWTH
+    //text("growth:" + this.growth, this.position.x, this.position.y + rowHeight*5);
+    text("Level:" + this.level, this.position.x, this.position.y + rowHeight*0);
+    //text("maturity:" + this.maturity, this.position.x, this.position.y + rowHeight*1);
+    //text("lifespan:" + this.lifespan, this.position.x, this.position.y + rowHeight*2);
+    //text("age:" + this.age, this.position.x, this.position.y + rowHeight*3);
+
+    // MOVEMENT
+    //text("vel.x:" + this.velocity.x, this.position.x, this.position.y + rowHeight*4);
+    //text("vel.y:" + this.velocity.y, this.position.x, this.position.y + rowHeight*5);
+    //text("vel.heading():" + this.velocity.heading(), this.position.x, this.position.y + rowHeight*3);
+    //text("Noise%:" + p.noisePercent, this.position.x, this.position.y + rowHeight*1);
+    //text("screw amount:" + p.spiral, this.position.x, this.position.y + rowHeight*2);
+  }
+
+
 
 
 }
