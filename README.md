@@ -1,4 +1,4 @@
-# cellifract
+# Branch-o-Scope
 Kadenze Nature of Code Assignment 4: Fractals
 
 [https://rik-brown.github.io/Branch-o-Scope/]
