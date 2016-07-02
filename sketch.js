@@ -91,40 +91,44 @@ var Parameters = function () { //These are the initial values, not the randomise
 }
 
 var initGUI = function () {
-    var controller = gui.add(p, 'colonySize', 1, 25).step(1).name('Seeds').listen();
-      controller.onChange(function(value) {populateColony(); });
-    var controller = gui.add(p, 'maxDivides', 2, 9).step(1).name('Levels').listen();
-      controller.onChange(function(value) {populateColony(); });
-    var controller = gui.add(p, 'cellStartSize', 2, 200).step(1).name('Diameter').listen();
-    	controller.onChange(function(value) {populateColony(); });
-    var controller = gui.add(p, 'growth', -10, +10).step(0.1).name('Growth').listen();
-    	controller.onChange(function(value) {populateColony(); });
-    var controller = gui.add(p, 'lifespan', 50, 500).step(1).name('Length').listen();
-    	controller.onChange(function(value) {populateColony(); });
-    var controller = gui.add(p, 'maxAngle', 0, 90).step(1).name('Angle').listen();
-    	controller.onChange(function(value) {populateColony(); });
-    var controller = gui.add(p, 'noisePercent', 0, 100).step(1).name('Noise').listen();
-    	controller.onChange(function(value) {populateColony(); });
-    var controller = gui.add(p, 'spiral', 0, 0.5).name('Twist').listen();
-    	controller.onChange(function(value) {populateColony(); });
-    var controller = gui.addColor(p, 'bkgColHSV').name('Background').listen();
-	    controller.onChange(function(value) {p.bkgColor = color(value.h, value.s*255, value.v*255); background(p.bkgColor); populateColony();});
-	  var controller = gui.addColor(p, 'fillColHSV').name('Fill').listen();
-      controller.onChange(function(value) {p.fillColor = color(value.h, value.s*255, value.v*255); populateColony();});
-    var controller = gui.add(p, 'fillAlpha', 0, 255).name('Transparency').listen();
-      controller.onChange(function(value) {populateColony(); });
-    var controller = gui.addColor(p, 'strokeColHSV').name('Outline').listen();
-	    controller.onChange(function(value) {p.strokeColor = color(value.h, value.s*255, value.v*255); populateColony();});
-	  var controller =gui.add(p, 'strokeAlpha', 0, 255).name('Transparency').listen();
-      controller.onChange(function(value) {populateColony(); });
-    var controller = gui.add(p, 'displayMode', { Ellipse: 1, Point: 2 } ).name('Display Mode');
-      controller.onChange(function(value) {populateColony(); });
-    gui.add(p, 'trailMode', { None: 1, Blend: 2, Continuous: 3} ).name('Trail Mode');
-    var controller = gui.add(p, 'autoRestart').name('Auto-restart');
-      controller.onChange(function(value) {populateColony(); });
-    gui.add(p, 'restart').name('RESTART [R]');
-    gui.add(p, 'screenshot').name('SCREENSHOT [S]');
-    //gui.close()
+  var f1 = gui.addFolder('Colony');
+  var controller = f1.add(p, 'colonySize', 1, 25).step(1).name('Seeds').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var controller = f1.add(p, 'maxDivides', 2, 9).step(1).name('Levels').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var f2 = gui.addFolder('Cell');
+  var controller = f2.add(p, 'cellStartSize', 2, 200).step(1).name('Diameter').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var controller = f2.add(p, 'growth', -10, +10).step(0.1).name('Growth').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var controller = f2.add(p, 'lifespan', 50, 500).step(1).name('Length').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var controller = f2.add(p, 'maxAngle', 0, 90).step(1).name('Angle').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var controller = f2.add(p, 'noisePercent', 0, 100).step(1).name('Noise').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var controller = f2.add(p, 'spiral', 0, 0.5).name('Twist').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var f3 = gui.addFolder('Color');
+  var controller = f3.addColor(p, 'bkgColHSV').name('Background').listen();
+    controller.onChange(function(value) {p.bkgColor = color(value.h, value.s*255, value.v*255); background(p.bkgColor); populateColony();});
+  var controller = f3.addColor(p, 'fillColHSV').name('Fill').listen();
+    controller.onChange(function(value) {p.fillColor = color(value.h, value.s*255, value.v*255); populateColony();});
+  var controller = f3.add(p, 'fillAlpha', 0, 255).name('Transparency').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var controller = f3.addColor(p, 'strokeColHSV').name('Outline').listen();
+    controller.onChange(function(value) {p.strokeColor = color(value.h, value.s*255, value.v*255); populateColony();});
+  var controller =f3.add(p, 'strokeAlpha', 0, 255).name('Transparency').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var f4 = gui.addFolder('Options');
+  var controller = f4.add(p, 'displayMode', { Ellipse: 1, Point: 2 } ).name('Display Mode');
+    controller.onChange(function(value) {populateColony(); });
+  f4.add(p, 'trailMode', { None: 1, Blend: 2, Continuous: 3} ).name('Trail Mode');
+  var controller = f4.add(p, 'autoRestart').name('Auto-restart');
+    controller.onChange(function(value) {populateColony(); });
+  gui.add(p, 'restart').name('RESTART [R]');
+  gui.add(p, 'screenshot').name('SCREENSHOT [S]');
+  //gui.close()
 }
 
 
