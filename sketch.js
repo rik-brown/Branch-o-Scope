@@ -34,8 +34,8 @@ function draw() {
     if (c.timeToDivide()) {
       if (c.level < p.maxDivides) {
         c.level ++;
-        colony.push(colony[i].spawn(random(0, p.maxAngle))); // Add new cell going right
-        colony.push(colony[i].spawn(random(0,-p.maxAngle))); // Add new cell going left
+        colony.push(colony[i].spawn(random(p.maxAngle*0.5, p.maxAngle))); // Add new cell going right
+        colony.push(colony[i].spawn(random(-p.maxAngle*0.5,-p.maxAngle))); // Add new cell going left
         colony.splice(i, 1); // Remove the current cell from the array
       }
     }
@@ -87,6 +87,12 @@ var Parameters = function () { //These are the initial values, not the randomise
   this.strokeColHSV = { h: random(360), s: random(), v: random() };
   this.strokeColor = color(this.strokeColHSV.h, this.strokeColHSV.s*255, this.strokeColHSV.v*255); // Cell colour
   this.strokeAlpha = random(255);
+  if (random(1) > 0.5) {this.fill_HTwist = floor(random(1, 360));} else {this.fill_HTwist = 0;}
+  if (random(1) > 0.5) {this.fill_STwist = floor(random (1,255));} else {this.fill_STwist = 0;}
+  if (random(1) > 0.5) {this.fill_BTwist = floor(random (1,255));} else {this.fill_BTwist = 0;}
+  if (random(1) > 0.5) {this.stroke_HTwist = floor(random(1, 360));} else {this.stroke_HTwist = 0;}
+  if (random(1) > 0.5) {this.stroke_STwist = floor(random (1,255));} else {this.stroke_STwist = 0;}
+  if (random(1) > 0.5) {this.stroke_BTwist = floor(random (1,255));} else {this.stroke_BTwist = 0;}
   this.screenshot = function () {saveCanvas('screendump.png', 'png');}
 }
 
@@ -97,11 +103,11 @@ var initGUI = function () {
   var controller = f1.add(p, 'maxDivides', 2, 9).step(1).name('Levels').listen();
     controller.onChange(function(value) {populateColony(); });
   var f2 = gui.addFolder('Cell');
-  var controller = f2.add(p, 'cellStartSize', 2, 200).step(1).name('Diameter').listen();
-    controller.onChange(function(value) {populateColony(); });
-  var controller = f2.add(p, 'growth', -10, +10).step(0.1).name('Growth').listen();
+  var controller = f2.add(p, 'cellStartSize', 2, 200).step(1).name('Radius').listen();
     controller.onChange(function(value) {populateColony(); });
   var controller = f2.add(p, 'lifespan', 50, 500).step(1).name('Length').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var controller = f2.add(p, 'growth', -10, +10).step(0.1).name('Growth').listen();
     controller.onChange(function(value) {populateColony(); });
   var controller = f2.add(p, 'maxAngle', 0, 90).step(1).name('Angle').listen();
     controller.onChange(function(value) {populateColony(); });
@@ -120,15 +126,25 @@ var initGUI = function () {
     controller.onChange(function(value) {p.strokeColor = color(value.h, value.s*255, value.v*255); populateColony();});
   var controller =f3.add(p, 'strokeAlpha', 0, 255).name('Transparency').listen();
     controller.onChange(function(value) {populateColony(); });
-  var f4 = gui.addFolder('Options');
-  var controller = f4.add(p, 'displayMode', { Ellipse: 1, Point: 2 } ).name('Display Mode');
+  var f4 = gui.addFolder("Color Tweaks");
+    f4.add(p, 'fill_HTwist', 0, 360).step(1).name('Hue').listen();
+    f4.add(p, 'fill_STwist', 0, 255).step(1).name('Saturation').listen();
+    f4.add(p, 'fill_BTwist', 0, 255).step(1).name('Brightness').listen();
+    f4.add(p, 'stroke_HTwist', 0, 360).step(1).name('Hue').listen();
+    f4.add(p, 'stroke_STwist', 0, 255).step(1).name('Saturation').listen();
+    f4.add(p, 'stroke_BTwist', 0, 255).step(1).name('Brightness').listen();
+
+  var f5 = gui.addFolder('Options');
+  var controller = f5.add(p, 'displayMode', { Ellipse: 1, Point: 2 } ).name('Display Mode');
     controller.onChange(function(value) {populateColony(); });
-  f4.add(p, 'trailMode', { None: 1, Blend: 2, Continuous: 3} ).name('Trail Mode');
-  var controller = f4.add(p, 'autoRestart').name('Auto-restart');
+  f5.add(p, 'trailMode', { None: 1, Blend: 2, Continuous: 3} ).name('Trail Mode');
+  var controller = f5.add(p, 'autoRestart').name('Auto-restart');
     controller.onChange(function(value) {populateColony(); });
   gui.add(p, 'restart').name('RESTART [R]');
   gui.add(p, 'screenshot').name('SCREENSHOT [S]');
-  //gui.close()
+  f3.open();
+  f4.open();
+  //gui.close();
 }
 
 

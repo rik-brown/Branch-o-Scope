@@ -50,6 +50,7 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
     this.live(); // Cell matures (may be useful later for colorshifting)
     this.updatePosition();
     this.updateSize();
+    this.updateColor();
     //this.cellDebugger();
   }
 
@@ -72,8 +73,27 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
 
   this.updateSize = function() {
     this.r += this.growth;
-    this.size = map(this.r, this.cellStartSize, this.cellEndSize, 1, 0);
+    this.size = map(this.r, p.cellStartSize, this.cellEndSize, 1, 0);
   }
+
+  this.updateColor = function() {
+    if (p.fill_STwist > 0) {this.fill_S = map(this.size, 1, 0, (255-p.fill_STwist), 255); this.fillColor = color(this.fill_H, this.fill_S, this.fill_B);} // Modulate fill saturation by radius
+    if (p.fill_BTwist > 0) {this.fill_B = map(this.size, 1, 0, (255-p.fill_BTwist), 255); this.fillColor = color(this.fill_H, this.fill_S, this.fill_B);} // Modulate fill brightness by radius
+    if (p.fill_HTwist > 0) { // Modulate fill hue by radius. Does not change original hue value but replaces it with a 'twisted' version
+      this.fill_Htwisted = map(this.size, 1, 0, this.fill_H, this.fill_H+p.fill_HTwist);
+      if (this.fill_Htwisted > 360) {this.fill_Htwisted -= 360;}
+      this.fillColor = color(this.fill_Htwisted, this.fill_S, this.fill_B); //fill colour is updated with new hue value
+    }
+    if (p.stroke_STwist > 0) {this.stroke_S = map(this.size, 1, 0, (255-p.stroke_STwist), 255); this.strokeColor = color(this.stroke_H, this.stroke_S, this.stroke_B);} // Modulate stroke saturation by radius
+    if (p.stroke_BTwist > 0) {this.stroke_B = map(this.size, 1, 0, (255-p.stroke_BTwist), 255); this.strokeColor = color(this.stroke_H, this.stroke_S, this.stroke_B);} // Modulate stroke brightness by radius
+    if (p.stroke_HTwist > 0) { // Modulate stroke hue by radius
+      this.stroke_Htwisted = map(this.size, 1, 0, this.stroke_H, this.stroke_H+p.stroke_HTwist);
+      if (this.stroke_Htwisted > 360) {this.stroke_Htwisted -= 360;}
+      this.strokeColor = color(this.stroke_Htwisted, this.stroke_S, this.stroke_B); //stroke colour is updated with new hue value
+    }
+  }
+
+
 
   this.timeToDivide = function() {
     this.life--;
