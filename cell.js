@@ -1,15 +1,13 @@
 // cell Class
 function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
 
-  // BOOLEAN
-  this.growing = true; // A new cell always starts of moving & growing
-
   // GROWTH & REPRODUCTION
   this.level = level_;
-  this.age = 0;
-  this.growth = p.growth * random (0.009, 0.011); //Growth Factor is determined by GUI & is equal for all cells
-  this.lifespan = lifespan_ * random (0.9, 1.1);
-  this.life = this.lifespan;
+  this.age = 0; //
+  this.growth = p.growth * random (0.009, 0.011); // Growth Factor is determined by GUI with some random variation
+  this.lifespan = lifespan_ * random (0.9, 1.1); // Lifespan is determined by GUI with some random variation
+  this.branchiness = (100-p.branchiness) * random (0.009, 0.011); // Branchiness is determined by GUI with some random variation
+  this.life = this.lifespan; // Life is a copy of the initial value for lifespan (since lifespan value is needed later)
 
 
   // FILL COLOR
@@ -31,9 +29,6 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
   this.cellEndSize = 0.5;
   this.r = this.cellStartSize; // Initial value for radius
   this.size = map(this.r, this.cellStartSize, this.cellEndSize, 1, 0); // Size is a measure of progress from starting to final radius
-  //this.flatness = random (0.6, 1.4); // Flatness makes the circle into an ellipse
-  this.flatness = 1;
-  //this.growth = (this.cellStartSize-this.cellEndSize)/this.lifespan; // Growth-rate is calculated from size & expected lifespan
 
 
   // MOVEMENT
@@ -47,16 +42,16 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
   this.step = random(0.001, 0.006); //Step-size for noise
 
   this.run = function() {
-    this.live(); // Cell matures (may be useful later for colorshifting)
-    this.updatePosition();
-    this.updateSize();
-    this.updateColor();
-    //this.cellDebugger();
+    this.live();           // Cells age and mature
+    this.updatePosition(); // Cells move
+    this.updateSize();     // Cells change size
+    this.updateColor();    // Cells change color
+    //this.cellDebugger(); // Uncomment to enable debug mode for cell
   }
 
   this.live = function() {
     this.age += 1; // Age starts at 0 and increases by one for every drawcycle
-    this.maturity = map(this.age, 0, this.lifespan, 1, 0); // Maturity moves from 1 at spawn to 0 at death
+    this.maturity = map(this.age, 0, this.lifespan, 0, 1); // Maturity increases from 0 at spawn to 1 when age = lifespan
   }
 
   this.updatePosition = function() {
@@ -66,7 +61,7 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
     this.xoff += this.step; // increment x offset for next vx value
     this.yoff += this.step; // increment x offset for next vy value
     this.velocity = p5.Vector.lerp(this.velocityLinear, velocityNoise, p.noisePercent*0.01);
-    var screwAngle = map(this.maturity, 0, 1, 0, this.spiral * TWO_PI); //swapped size with maturity
+    var screwAngle = map(this.maturity, 1, 0, 0, this.spiral * TWO_PI); // maturity is used (instead of size) to give twist even when size is constant
     this.velocity.rotate(screwAngle);
     this.position.add(this.velocity);
   }
@@ -93,12 +88,9 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
     }
   }
 
-
-
-  this.timeToDivide = function() {
+  this.timeToBranch = function() {
     this.life--;
-    if (this.life < 0 && this.growing) { // when life has counted down to zero, the cell will divide
-      this.growing = false;
+    if (this.maturity > this.branchiness) { // when life has counted down to zero, the cell will divide
       return true;
     } else {
       return false;
@@ -115,7 +107,7 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
     // Look, polar coordinates to cartesian!!
     var newvel = createVector(m * cos(theta), m * sin(theta));
     // Return a new Branch
-    return new Cell(this.position, newvel, this.r, this.lifespan * 0.9, this.level);
+    return new Cell(this.position, newvel, this.r, this.lifespan * 0.9, this.level); // Lifespan gets progressively shorter for each generation
   }
 
 
@@ -127,7 +119,7 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
     push();
     translate(this.position.x, this.position.y);
     rotate(angle);
-    ellipse(0, 0, this.r, this.r * this.flatness); // Red ellipse at full size of cell
+    ellipse(0, 0, this.r, this.r);
     pop();
   }
 
@@ -142,13 +134,13 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
 
   // Death
   this.dead = function() {
-    if (this.r < 0 || this.r > this.cellStartize * 4) {return true;} // Death by size
-    //if (this.maturity = 0) {return true;} // Death by old age (regardless of size, which may remain constant)
+    if (this.r < 0 || this.r > this.cellStartSize * 4) {return true;} // Death by size
+    if (this.maturity > 1) {return true;} // Death by old age (regardless of size, which may remain constant)
     if (this.position.x > width + this.r*this.flatness || this.position.x < -this.r*this.flatness || this.position.y > height + this.r*this.flatness || this.position.y < -this.r*this.flatness) {return true;} // Death if move beyond canvas boundary
     else {return false; }
   }
 
-  this.cellDebugger = function() { // Displays cell parameters as text (for debug only)
+  this.cellDebugger = function() { // Displays cell parameters as text at cell position (for debug only)
     var rowHeight = 15;
     fill(255);
     textSize(rowHeight);
@@ -160,9 +152,10 @@ function Cell(pos, vel, cellStartSize_, lifespan_, level_) {
     // GROWTH
     //text("growth:" + this.growth, this.position.x, this.position.y + rowHeight*5);
     text("Level:" + this.level, this.position.x, this.position.y + rowHeight*0);
-    //text("maturity:" + this.maturity, this.position.x, this.position.y + rowHeight*1);
-    //text("lifespan:" + this.lifespan, this.position.x, this.position.y + rowHeight*2);
-    //text("age:" + this.age, this.position.x, this.position.y + rowHeight*3);
+    text("maturity:" + this.maturity, this.position.x, this.position.y + rowHeight*1);
+    text("lifespan:" + this.lifespan, this.position.x, this.position.y + rowHeight*2);
+    text("age:" + this.age, this.position.x, this.position.y + rowHeight*3);
+    text("Branchiness:" + this.branchiness, this.position.x, this.position.y + rowHeight*4);
 
     // MOVEMENT
     //text("vel.x:" + this.velocity.x, this.position.x, this.position.y + rowHeight*4);
