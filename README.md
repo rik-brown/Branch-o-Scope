@@ -3,15 +3,22 @@ Kadenze Nature of Code Assignment 4: Fractals
 
 [https://rik-brown.github.io/Branch-o-Scope/]
 
-I aim to create a recursive function using a 'cell' object
-The cell will have behaviour including movement, growth & spawning a number of children
-The spawned of children will be the recursive element, calling the primary constructor function anew
+My goal was to create a recursive function using a 'cell' object.
+The 'cell' has behaviour including movement, growth & spawning a number of 'children.
+The spawned children are the recursive element, calling the 'cell' constructor function anew for a given number of generations.
 
-The movement will incorporate a blend of linear velocity with heading-rotation (related to age of cell) and perlin noise (for some variation between cells)
+Cell movement comprises an adjustable composite of simple linear velocity, perlin noise-based velocity and rotation of heading (in proportion to age of cell).
 
-The lifespan of each cell will be relative to it's generation number <Currently solved by: Lifespan is multiplied by a static value (0.8) at each branch>
+Cell size, growth-rate and lifespan determine the appearance of each branch-element.
+'Branchiness' determines how soon a cell may divide, while 'angle' controls the heading of the new branch relative to the parent.
 
-Compared to Cellendipity, the main distinction is that the rules for spawning new cells here are governed by an internal 'recursion rule' as opposed to an external 'environmental chance rule' (ie. being fertile while occupying the same space as a fertile other)
+Cell and background color may be selected in the menu.
+Fill and stroke colors may also be individually 'tweaked' (hue, saturation or brightness) in proportion to the cell radius. 
 
-It would be awesome to offer the alternative to use a steering force (e.g. avoidance) as an alternative to perlin noise.
-Some colour could be nice - colourshifting as radius shrinks?
+Future ideas:
+I would like to experiment with different branching rules (e.g. varying the number of children, allowing the parent branch to continue growing, branching to alternative sides etc.).
+I would also like to try  some other movement behaviours, e.g. using a steering force (like avoidance) as an alternative to perlin noise.
+
+Richard Brown
+3rd July 2016
+
